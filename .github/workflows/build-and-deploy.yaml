@@ -10,12 +10,14 @@ on:
         type: choice
         options:
         - prd
+        - dev
 
 jobs:
   build:
     environment: ${{ inputs.env }}
     env:
       GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      PROJECT: ${{ secrets.PROJECT }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -31,9 +33,9 @@ jobs:
       - name: Dockerize
         run: |
           gcloud auth configure-docker -q
-          docker build . -t gcr.io/go-weather-forecast/python-hello-world:$GITHUB_REF_NAME -t gcr.io/go-weather-forecast/python-hello-world:latest
-          docker push gcr.io/go-weather-forecast/python-hello-world:$GITHUB_REF_NAME
-          docker push gcr.io/go-weather-forecast/python-hello-world:latest
+          docker build . -t gcr.io/$PROJECT/python-hello-world:$GITHUB_REF_NAME -t gcr.io/$PROJECT/python-hello-world:latest
+          docker push gcr.io/$PROJECT/python-hello-world:$GITHUB_REF_NAME
+          docker push gcr.io/$PROJECT/python-hello-world:latest
 
   deploy:
     needs: build
@@ -41,6 +43,7 @@ jobs:
     environment: ${{ inputs.env }}
     env:
       GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      PROJECT: ${{ secrets.PROJECT }}
     steps:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
@@ -55,5 +58,5 @@ jobs:
           --platform=managed \
           --allow-unauthenticated \
           --port=8080 \
-          --image=gcr.io/go-weather-forecast/python-hello-world:latest \
+          --image=gcr.io/$PROJECT/python-hello-world:latest \
           --region=us-central1
