@@ -16,7 +16,7 @@ jobs:
     environment: ${{ inputs.env }}
     env:
       GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -36,6 +36,7 @@ jobs:
           docker push gcr.io/go-weather-forecast/python-hello-world:latest
 
   deploy:
+    runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
     env:
       GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
