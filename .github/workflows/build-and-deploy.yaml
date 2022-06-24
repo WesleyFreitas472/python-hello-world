@@ -27,9 +27,9 @@ jobs:
       - name: Dockerize
         run: |
           gcloud auth configure-docker -q
-          docker build . -t gcr.io/python-hello-world:$GITHUB_REF_NAME -t gcr.io/python-hello-world:latest
-          docker push gcr.io/python-hello-world:$GITHUB_REF_NAME
-          docker push gcr.io/python-hello-world:latest
+          docker build . -t gcr.io/go-weather-forecast/python-hello-world:$GITHUB_REF_NAME -t gcr.io/go-weather-forecast/python-hello-world:latest
+          docker push gcr.io/go-weather-forecast/python-hello-world:$GITHUB_REF_NAME
+          docker push gcr.io/go-weather-forecast/python-hello-world:latest
   # deploy:
   #   environment: prd
   #   env:
