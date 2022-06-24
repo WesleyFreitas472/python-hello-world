@@ -34,28 +34,24 @@ jobs:
           docker build . -t gcr.io/go-weather-forecast/python-hello-world:$GITHUB_REF_NAME -t gcr.io/go-weather-forecast/python-hello-world:latest
           docker push gcr.io/go-weather-forecast/python-hello-world:$GITHUB_REF_NAME
           docker push gcr.io/go-weather-forecast/python-hello-world:latest
-  # deploy:
-  #   environment: prd
-  #   env:
-  #     GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-  #   steps:
-  #     - name: 'Set up Cloud SDK'
-  #       uses: 'google-github-actions/setup-gcloud@v0'
+
+  deploy:
+    environment: ${{ inputs.env }}
+    env:
+      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+    steps:
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
+
+      - uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
       
-  #     - name: Deploy
-  #       run: |
-  #         gcloud run deploy python-hello-world \
-  #         --platform=managed \
-  #         --allow-unauthenticated \
-
-  #     - '--port=3000'
-
-  #     - '--image=${_IMAGE_NAME}:${SHORT_SHA}'
-
-  #     - >-
-
-  #       --labels=managed-by=gcp-cloud-build,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,$_LABELS
-
-  #     - '--region=$_DEPLOY_REGION'
-
-  #     - '--quiet'
+      - name: Deploy
+        run: |
+          gcloud run deploy python-hello-world \
+          --platform=managed \
+          --allow-unauthenticated \
+          --port=8080 \
+          --image=gcr.io/go-weather-forecast/python-hello-world:latest \
+          --region=us-central1
