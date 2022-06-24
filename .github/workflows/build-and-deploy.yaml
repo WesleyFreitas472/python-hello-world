@@ -1,0 +1,58 @@
+name: Tenkai-API CI
+
+on: 
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Environment'     
+        required: true
+        default: 'prd'
+        type: choice
+        options:
+        - prd
+
+jobs:
+  build:
+    environment: ${{ inputs.env }}
+    env:
+      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+    runs-on: ubuntu-18.04
+    environment: $environment
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
+
+      - name: Dockerize
+        run: |
+          gcloud auth configure-docker -q
+          docker build . -t gcr.io/python-hello-world:$GITHUB_REF_NAME -t gcr.io/python-hello-world:latest
+          docker push gcr.io/python-hello-world:$GITHUB_REF_NAME
+          docker push gcr.io/python-hello-world:latest
+  # deploy:
+  #   environment: prd
+  #   env:
+  #     GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+  #   steps:
+  #     - name: 'Set up Cloud SDK'
+  #       uses: 'google-github-actions/setup-gcloud@v0'
+      
+  #     - name: Deploy
+  #       run: |
+  #         gcloud run deploy python-hello-world \
+  #         --platform=managed \
+  #         --allow-unauthenticated \
+
+  #     - '--port=3000'
+
+  #     - '--image=${_IMAGE_NAME}:${SHORT_SHA}'
+
+  #     - >-
+
+  #       --labels=managed-by=gcp-cloud-build,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,$_LABELS
+
+  #     - '--region=$_DEPLOY_REGION'
+
+  #     - '--quiet'
