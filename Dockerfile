@@ -6,4 +6,7 @@ COPY . /app
 
 RUN pip install flask
 
+ARG TAG
+ENV MESSAGE=$TAG
+
 CMD [ "python", "main.py" ]
