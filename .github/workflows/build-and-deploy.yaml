@@ -11,8 +11,8 @@ on:
         options:
         - prd
         - dev
-  banches:
-    - main
+    banches:
+      - main
 
 jobs:
   build:
