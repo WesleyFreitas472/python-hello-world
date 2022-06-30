@@ -4,11 +4,11 @@ on: ["push"]
 
 jobs:
   test:
-  runs-on: ubuntu-latest
-  strategy:
-    matrix:
-      client: ["A", "B", "C"]
-  steps:
-    name: Print
-    run: |
-      echo ${{ matrix.version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        client: ["A", "B", "C"]
+    steps:
+      name: Print
+      run: |
+        echo ${{ matrix.version }}
