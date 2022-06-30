@@ -1,6 +1,6 @@
 name: Test Matrix
 
-on: ["push"]
+on: push
 
 jobs:
   test:
