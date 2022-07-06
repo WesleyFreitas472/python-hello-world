@@ -9,6 +9,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        
       - name: Trigger
         run: gh workflow run build-and-deploy.yaml -f environment=dev --ref develop
         env:
