@@ -1,14 +1,15 @@
 name: Test Matrix
 
-on: push
+on: 
+  push:
+    branches:
+      - develop
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        client: ["A", "B", "C"]
     steps:
-      - name: Print
-        run: |
-          echo ${{ matrix.client }}
+      - name: Trigger
+        run: gh workflow run build-and-deploy.yaml -f environment=dev --ref develop
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
